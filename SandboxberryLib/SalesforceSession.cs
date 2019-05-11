@@ -28,6 +28,7 @@ using SandboxberryLib.SalesforcePartnerApi;
 using System.Web.Services.Protocols;
 using SandboxberryLib.InstructionsModel;
 using System.Net;
+using SandboxberryLib.SalesforceMetadataApi;
 
 namespace SandboxberryLib
 {
@@ -36,6 +37,8 @@ namespace SandboxberryLib
         private static readonly ILog logger = LogManager.GetLogger(typeof(SalesforceSession));
 
         private SbbCredentials _credentials;
+
+        private string _metadataUrl;
 
         public SalesforceSession(SbbCredentials cred)
         {
@@ -69,6 +72,7 @@ namespace SandboxberryLib
               * to the virtual server instance that is servicing your organization
             */
             service.Url = loginResult.serverUrl;
+            _metadataUrl = loginResult.metadataServerUrl;
 
             /** 
             * The client application now has an instance of the SforceService
@@ -80,12 +84,22 @@ namespace SandboxberryLib
             * the SforceService. Add the session ID returned from the login to the
             * session header.
             */
-            service.SessionHeaderValue = new SessionHeader();
+            service.SessionHeaderValue = new SalesforcePartnerApi.SessionHeader();
             service.SessionHeaderValue.sessionId = loginResult.sessionId;
 
             logger.DebugFormat("Successful login for {0}", _credentials.SalesforceLogin);
 
             return service;
+        }
+
+        public MetadataService MetadataLogin()
+        {
+            SforceService service = Login();
+            MetadataService metadata = new MetadataService();
+            metadata.Url = _metadataUrl;
+            metadata.SessionHeaderValue = new SalesforceMetadataApi.SessionHeader();
+            metadata.SessionHeaderValue.sessionId = service.SessionHeaderValue.sessionId;
+            return metadata;
         }
 
         // like login, but doesn't return anything

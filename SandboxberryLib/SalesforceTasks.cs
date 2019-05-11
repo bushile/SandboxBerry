@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using SandboxberryLib.SalesforcePartnerApi;
 using SandboxberryLib.InstructionsModel;
 using log4net;
+using SandboxberryLib.SalesforceMetadataApi;
 
 namespace SandboxberryLib
 {
@@ -33,6 +34,7 @@ namespace SandboxberryLib
 
         private SalesforceSession _salesforceSession;
         private SforceService _binding = null;
+        private MetadataService _metadata = null;
 
         private Dictionary<string,DescribeSObjectResult> _metaDictionary;
 
@@ -47,6 +49,38 @@ namespace SandboxberryLib
          
         }
 
+        public void MetadataTest()
+        {
+            LoginIfRequired();
+            var test = _metadata.describeMetadata(40.0);
+            foreach(var obj in test.metadataObjects)
+            {
+                obj.ToString();
+            }
+
+            ListMetadataQuery query = new ListMetadataQuery();
+            query.type = "CustomObject";
+            double asOfVersion = 45.0;
+            var list = _metadata.listMetadata(new ListMetadataQuery[] { query }, asOfVersion);
+            foreach(var obj in list)
+            {
+                obj.ToString();
+            }
+
+            var acctObj = _metadata.readMetadata("CustomObject", new string[] { "Account" });
+            foreach(var obj in acctObj)
+            {
+                var customObject = obj as CustomObject;
+                foreach(var rule in customObject.validationRules)
+                {
+                    rule.active = true;
+                }
+            }
+
+            var result = _metadata.updateMetadata(acctObj);
+
+            result.ToString();
+        }
 
         public void FetchObjectMetadata(string[] apiNameArray)
         {
@@ -154,6 +188,8 @@ namespace SandboxberryLib
             if (_binding == null)
                 _binding = _salesforceSession.Login();
 
+            if (_metadata == null)
+                _metadata = _salesforceSession.MetadataLogin();
         }
 
         public string BuildQuery(string sobjectName, List<string> colList, string filter)
@@ -326,7 +362,7 @@ namespace SandboxberryLib
             int successCount = 0;
             int errorCount = 0;
             List<string> errorMessages = new List<string>();
-            foreach (DeleteResult resLoop in deleteResults)
+            foreach (SalesforcePartnerApi.DeleteResult resLoop in deleteResults)
             {
                 if (resLoop.success)
                     successCount += 1;
@@ -370,11 +406,11 @@ namespace SandboxberryLib
             return _binding.getUserInfo().userId;
         }
 
-        public bool CheckSaveResults(SaveResult[] saveResults, string contextForLog, bool throwError)
+        public bool CheckSaveResults(SalesforcePartnerApi.SaveResult[] saveResults, string contextForLog, bool throwError)
         {
             bool allOK = true;
             List<string> errorSummaries = new List<string>();
-            foreach (SaveResult srLoop in saveResults)
+            foreach (SalesforcePartnerApi.SaveResult srLoop in saveResults)
             {
                 if (!srLoop.success)
                 {
@@ -392,7 +428,7 @@ namespace SandboxberryLib
             return allOK;
         }
 
-        private string GetSaveResultErrorText(SaveResult saveResult)
+        private string GetSaveResultErrorText(SalesforcePartnerApi.SaveResult saveResult)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var eloop in saveResult.errors)

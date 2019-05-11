@@ -64,6 +64,11 @@
     <Compile Include="ResultsModel\RowFailInfo.cs" />
     <Compile Include="SalesforceSession.cs" />
     <Compile Include="SalesforceTasks.cs" />
+    <Compile Include="Web References\SalesforceMetadataApi\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\SalesforcePartnerApi\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -77,6 +82,17 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="C:\code\SandboxBerry\SandboxBerryLib\SalesforceWsdl\metadata.wsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\SalesforceMetadataApi\</RelPath>
+      <UpdateFromURL>C:\code\SandboxBerry\SandboxBerryLib\SalesforceWsdl\metadata.wsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>SandboxberryLib_SalesforceMetadataApi_MetadataService</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="D:\Codeulike\Code\SandboxberrySol\SandboxberryLib\SalesforceWsdl\partner.wsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\SalesforcePartnerApi\</RelPath>
@@ -99,6 +115,44 @@
     <EmbeddedResource Include="Resources\SbbInstructionSetSchema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Web References\SalesforceMetadataApi\AsyncResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\CancelDeployResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\DeleteResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\DeployResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\DescribeMetadataResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\DescribeValueTypeResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\FileProperties.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\Metadata.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\metadata.wsdl" />
+    <None Include="Web References\SalesforceMetadataApi\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\RetrieveResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\SaveResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SalesforceMetadataApi\UpsertResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\SalesforcePartnerApi\DeleteResult.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -237,7 +291,6 @@
       <DependentUpon>Reference.map</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
