@@ -49,9 +49,62 @@ namespace SandboxberryLib
          
         }
 
-        public void MetadataTest()
+        public void MetadataTest(SbbInstructionSet instructions)
         {
             LoginIfRequired();
+
+            var objectInstructions = instructions.SbbObjects.Select(o => o.ApiName).ToArray();
+            var allObjectMetadata = _metadata.readMetadata("CustomObject", objectInstructions);
+
+            foreach(CustomObject objMeta in allObjectMetadata)
+            {
+                
+                //deactivate validation rules
+                if (objMeta.validationRules != null)
+                {
+                    foreach (var rule in objMeta.validationRules)
+                    {
+                        rule.active = false;
+                    }
+                }
+
+                //disable lookup filters
+                var lookups = objMeta.fields.Where(f => f.type == FieldType.Lookup);
+                foreach (var lookup in lookups)
+                {
+                    //TODO: does this really disable all filters?
+                    // fails with: "You must specify either picklist, globalPicklist, or valueSet."
+                    if (lookup.lookupFilter != null)
+                    {
+                        lookup.lookupFilter.active = false;
+                    }
+                }
+
+                //disable required fields
+                var requiredFields = objMeta.fields.Where(f => f.required);
+                foreach(var field in requiredFields)
+                {
+                    field.required = false;
+                }
+
+                //remove restrictions on picklist values
+                var picklists = objMeta.fields.Where(f => f.type == FieldType.Picklist);
+                foreach (var field in picklists)
+                {
+                    //TODO: how to get restrictions?
+                }
+
+                
+            }
+
+            var result = _metadata.updateMetadata(allObjectMetadata);
+            result.ToString();
+
+                //deactivate process builder processes
+
+
+                //deactivate workflow rules
+
             var test = _metadata.describeMetadata(40.0);
             foreach(var obj in test.metadataObjects)
             {
@@ -67,19 +120,6 @@ namespace SandboxberryLib
                 obj.ToString();
             }
 
-            var acctObj = _metadata.readMetadata("CustomObject", new string[] { "Account" });
-            foreach(var obj in acctObj)
-            {
-                var customObject = obj as CustomObject;
-                foreach(var rule in customObject.validationRules)
-                {
-                    rule.active = true;
-                }
-            }
-
-            var result = _metadata.updateMetadata(acctObj);
-
-            result.ToString();
         }
 
         public void FetchObjectMetadata(string[] apiNameArray)

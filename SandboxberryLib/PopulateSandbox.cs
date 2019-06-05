@@ -52,7 +52,7 @@ namespace SandboxberryLib
             _instructions = instructions;
             _relationMapper = relMapper;
 
-            _targetTasks.MetadataTest();
+            _targetTasks.MetadataTest(instructions);
         }
 
         public PopulateSandboxResult Start()
