@@ -100,7 +100,7 @@ namespace SandboxberryLib
                     {
                         var fieldName = fieldLoop.name;
                         var destinationObject = fieldLoop.referenceTo[0];
-                        if (destinationObject == "RecordType")
+                        if ("RecordType,Product2,Pricebook2,PricebookEntry".IndexOf(destinationObject) != -1)
                             logger.DebugFormat("GetObjectRelationships: {0} {1} refers to {2} so ignoring",
                          apiName, fieldLoop.name, destinationObject);
                         else
